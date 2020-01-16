@@ -3,7 +3,7 @@ import airflow
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 
-import datetime
+from datetime import datetime, timedelta
 
 concurrency = 2
 catchup = False
