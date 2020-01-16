@@ -9,9 +9,9 @@ concurrency = 2
 catchup = False
 
 config = {
-    'dag_id_1': {'schedule_interval': timedelta(minutes=15), "start_date": datetime(2020, 01, 11), "max_active_runs": 1},
-    'dag_id_2': {'schedule_interval': timedelta(minutes=20), "start_date": datetime(2020, 01, 11), "max_active_runs": 1},
-    'dag_id_3': {'schedule_interval': timedelta(minutes=25), "start_date": datetime(2020, 01, 11), "max_active_runs": 1}
+    'dag_id_1': {'schedule_interval': timedelta(minutes=15), "start_date": datetime.fromisoformat('2020-01-16'), "max_active_runs": 1},
+    'dag_id_2': {'schedule_interval': timedelta(minutes=20), "start_date": datetime.fromisoformat('2020-01-16'), "max_active_runs": 1},
+    'dag_id_3': {'schedule_interval': timedelta(minutes=25), "start_date": datetime.fromisoformat('2020-01-16'), "max_active_runs": 1}
 }
 
 
