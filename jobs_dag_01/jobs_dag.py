@@ -1,6 +1,8 @@
+"""
 import airflow
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
+"""
 from datetime import datetime, timedelta
 
 concurrency = 2
@@ -17,6 +19,7 @@ config = {
 
 for dict in config:
     print("%s" % dict)
+"""
     with DAG(dag_id=dict.dag_id,
              schedule_interval=dict.schedule_interval,
              start_date=dict.start_date,
@@ -26,4 +29,4 @@ for dict in config:
              ) as dag:
         DummyOperator(task_id='dummy-task',dag=dag)
 
-
+"""
