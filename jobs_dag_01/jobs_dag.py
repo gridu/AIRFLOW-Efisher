@@ -1,6 +1,7 @@
 import airflow
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.bash_operator import BashOperator
 
 from datetime import datetime, timedelta
 
@@ -23,7 +24,7 @@ for dict in config:
              max_active_runs=config[dict]['max_active_runs'], dagrun_timeout=timedelta(minutes=10),
              concurrency=concurrency, catchup=catchup) as dag:
         dop0 = DummyOperator(task_id='dummy-task')
-        dop1 = DummyOperator(task_id='dummy-sub-task')
+        dop1 = BashOperator(task_id='dummy-sub-task',bash_command='echo `date`')
         dop1.set_upstream(dop0)
 
 """ test 2 """
