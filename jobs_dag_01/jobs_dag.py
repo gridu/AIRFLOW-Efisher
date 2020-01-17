@@ -26,6 +26,6 @@ for dict in config:
         dop1 = DummyOperator(task_id='dummy-sub-task')
         dop1 >> dop0
 
-        print("%s" % dop.dag)
+        print("%s" % dop0.dag)
 
 """ test 2 """
