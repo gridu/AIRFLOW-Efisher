@@ -22,7 +22,7 @@ for dict in config:
     with DAG(dag_id=dict, schedule_interval=config[dict]['schedule_interval'], start_date=config[dict]['start_date'],
              max_active_runs=config[dict]['max_active_runs'], dagrun_timeout=timedelta(minutes=10),
              concurrency=concurrency, catchup=catchup) as dag:
-        DummyOperator(task_id='dummy-task', dag=dag)
+        DummyOperator(task_id='dummy-task')
         print("%s" % dict, config[dict]['start_date'])
 
 """ test 2 """
