@@ -20,11 +20,11 @@ config = {
 }
 
 for dict in config:
-    with DAG(dag_id=dict, schedule_interval=config[dict]['schedule_interval'], start_date=config[dict]['start_date'],
-             max_active_runs=config[dict]['max_active_runs'], dagrun_timeout=timedelta(minutes=10),
-             concurrency=concurrency, catchup=catchup) as dag:
-        dop0 = DummyOperator(task_id='dummy-task')
-        dop1 = BashOperator(task_id='dummy-sub-task', bash_command='echo `date`')
+    with DAG(dag_id=dict, schedule_interval=config[dict]['schedule_interval'], start_date=config[dict]['start_date'], max_active_runs=config[dict]['max_active_runs'], dagrun_timeout=timedelta(minutes=10), concurrency=concurrency, catchup=catchup) as dag:
+        dop0 = DummyOperator(task_id='dummy-task-'.join(dict))
+        dop1 = BashOperator(task_id='dummy-sub-task-'.join(dict), bash_command='echo `date`')
         dop1.set_upstream(dop0)
+else:
+    print ("Finished")
 
 """ test 2 """
