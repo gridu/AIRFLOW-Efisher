@@ -24,8 +24,6 @@ for dict in config:
              concurrency=concurrency, catchup=catchup) as dag:
         dop0 = DummyOperator(task_id='dummy-task')
         dop1 = DummyOperator(task_id='dummy-sub-task')
-        dop1 << dop0
-
-        print("%s" % dop0.dag)
+        dop1.set_upstream(dop0)
 
 """ test 2 """
