@@ -8,13 +8,13 @@ concurrency = 2
 catchup = False
 
 config = {
-    'dag_id_1': {'schedule_interval': timedelta(minutes=15), 'start_date': datetime(2020, 1, 16), 'max_active_runs': 1},
+    'dag_id_1': {'schedule_interval': timedelta(minutes=45), 'start_date': datetime(2020, 1, 18), 'max_active_runs': 2},
 
-    'dag_id_2': {'schedule_interval': timedelta(minutes=20), 'start_date': airflow.utils.dates.days_ago(1),
+    'dag_id_2': {'schedule_interval': timedelta(minutes=40), 'start_date': airflow.utils.dates.days_ago(1),
+                 'max_active_runs': 3},
+    'dag_id_3': {'schedule_interval': timedelta(minutes=55), 'start_date': airflow.utils.dates.days_ago(1),
                  'max_active_runs': 1},
-    'dag_id_3': {'schedule_interval': timedelta(minutes=25), 'start_date': airflow.utils.dates.days_ago(2),
-                 'max_active_runs': 1},
-    'dag_id_20': {'schedule_interval': timedelta(minutes=15), 'start_date': datetime(2020, 1, 16), 'max_active_runs': 1}
+    'dag_id_20': {'schedule_interval': timedelta(minutes=35), 'start_date': datetime(2020, 1, 18), 'max_active_runs': 1}
 }
 
 for dict in config:
