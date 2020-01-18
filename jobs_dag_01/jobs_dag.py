@@ -25,6 +25,9 @@ for dict in config:
         dop0 = DummyOperator(task_id='dummy-task-' + dict)
         dop1 = BashOperator(task_id='dummy-sub-task-' + dict, bash_command='echo `date`')
         dop1.set_upstream(dop0)
+
+    if dag:
+        globals()[dict] = dag
 else:
     print("Finished")
 
