@@ -4,6 +4,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
 from datetime import datetime, timedelta
+from pprint import pprint
 
 concurrency = 2
 catchup = False
