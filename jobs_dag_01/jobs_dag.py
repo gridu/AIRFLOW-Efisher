@@ -19,6 +19,8 @@ config = {
 
 
 def print_to_log(**kwargs):
+
+    pprint(kwargs)
     dag_id = kwargs['dag_id']
     database = kwargs['database']
     print(" %s start processing tables in database: %s" % (dag_id, database))
