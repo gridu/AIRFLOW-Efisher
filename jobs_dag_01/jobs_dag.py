@@ -20,9 +20,11 @@ config = {
 }
 
 
-def print_to_log( **kwargs):
+def print_to_log(ds, **kwargs):
+
     dag_id = "1234"
     pprint(kwargs)
+    print(ds)
     database = kwargs['database']
     table = kwargs['table']
     print(" %s start processing tables in database: %s.%s" % (dag_id, database, table))
