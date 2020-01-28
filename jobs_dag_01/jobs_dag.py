@@ -8,6 +8,7 @@ from pprint import pprint
 
 concurrency = 2
 catchup = False
+database="our_test_db"
 
 config = {
     'dag_id_1': {'schedule_interval': timedelta(minutes=45), 'start_date': datetime(2020, 1, 28), 'max_active_runs': 2,
@@ -23,8 +24,9 @@ def print_to_log(**kwargs):
 
     pprint(kwargs)
     dag_id = kwargs['task_instance']['dag_id']
-    database = "0db"
-    print(" %s start processing tables in database: %s" % (dag_id, database))
+    database = kwargs['database']
+    table = kwargs['table']
+    print(" %s start processing tables in database: %s.%s" % (dag_id, database, table))
     return 'Whatever you return gets printed in the logs'
 
 
@@ -35,14 +37,13 @@ for dict in config:
         'max_active_runs': config[dict]['max_active_runs'],
         'dagrun_timeout': timedelta(minutes=10),
         'concurrency': concurrency,
-        'catchup': catchup,
-        'database': 'our_test_db'
+        'catchup': catchup
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval']) as dag:
 
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
-                              op_kwargs={'database': 'value1'},
+                              op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
 
