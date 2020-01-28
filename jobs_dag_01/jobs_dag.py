@@ -22,13 +22,11 @@ config = {
 
 def print_to_log(ti,**kwargs):
 
-    dag_id = "1234"
-    pprint(kwargs)
-    print("ds: %s" % ti.dag_id)
+    dag_id = ti.dag_id
     database = kwargs['database']
     table = kwargs['table']
-    print(" %s start processing tables in database: %s.%s" % (dag_id, database, table))
-    return 'Whatever you return gets printed in the logs'
+    print("[print_to_log] %s start processing tables in database: %s.%s" % (dag_id, database, table))
+    return "[print_to_log] end"
 
 
 for dict in config:
