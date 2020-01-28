@@ -23,7 +23,7 @@ def print_to_log(**kwargs):
 
     pprint(kwargs)
     dag_id = kwargs['task_instance']['dag_id']
-    database = kwargs['dag'].database
+    database = "0db"
     print(" %s start processing tables in database: %s" % (dag_id, database))
     return 'Whatever you return gets printed in the logs'
 
