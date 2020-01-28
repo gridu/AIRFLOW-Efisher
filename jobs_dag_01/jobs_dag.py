@@ -20,10 +20,9 @@ config = {
 }
 
 
-def print_to_log(**kwargs):
+def print_to_log(dag_id, **kwargs):
 
     pprint(kwargs)
-    dag_id = kwargs['task_instance']['dag_id']
     database = kwargs['database']
     table = kwargs['table']
     print(" %s start processing tables in database: %s.%s" % (dag_id, database, table))
