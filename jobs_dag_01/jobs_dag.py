@@ -42,6 +42,7 @@ for dict in config:
 
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
+                              op_kwargs={'database': 'value1'},
                               python_callable=print_to_log
                               )
 
