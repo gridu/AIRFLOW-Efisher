@@ -48,9 +48,9 @@ for dict in config:
         dop2 = DummyOperator(task_id='query-the-table-' + dict)
         dop2.set_upstream(dop1)
 
-if dag:
-    globals()[dict] = dag
-else:
-    print("Finished")
+    if dag:
+        globals()[dict] = dag
+    else:
+        print("Finished")
 
 """ test 2 """
