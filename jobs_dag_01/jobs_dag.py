@@ -1,14 +1,12 @@
 import airflow
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
 from datetime import datetime, timedelta
-from pprint import pprint
 
 concurrency = 2
 catchup = False
-database="our_test_db"
+database = "our_test_db"
 
 config = {
     'dag_id_1': {'schedule_interval': timedelta(minutes=45), 'start_date': datetime(2020, 1, 28), 'max_active_runs': 2,
@@ -20,8 +18,7 @@ config = {
 }
 
 
-def print_to_log(ti,**kwargs):
-
+def print_to_log(ti, **kwargs):
     dag_id = ti.dag_id
     database = kwargs['database']
     table = kwargs['table']
@@ -39,18 +36,23 @@ for dict in config:
         'catchup': catchup
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval']) as dag:
-
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
 
-        dop1 = BashOperator(task_id='dummy-sub-task-' + dict, bash_command='echo `date`')
+        dop1 = DummyOperator(task_id='insert-new-row-' + dict)
         dop1.set_upstream(dop0)
 
-    if dag:
-        globals()[dict] = dag
+        """      
+        dop2 = BashOperator(task_id='dummy-sub-task-' + dict, bash_command='echo `date`')
+        """
+        dop2 = DummyOperator(task_id='query-the-table-' + dict)
+        dop2.set_upstream(dop1)
+
+if dag:
+    globals()[dict] = dag
 else:
     print("Finished")
 
