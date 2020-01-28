@@ -43,7 +43,7 @@ for dict in config:
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
-                              python_callable=print_to_log
+                              python_callable=print_to_log(dict)
                               )
 
         dop1 = BashOperator(task_id='dummy-sub-task-' + dict, bash_command='echo `date`')
