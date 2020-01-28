@@ -20,8 +20,8 @@ config = {
 }
 
 
-def print_to_log(dag_id, **kwargs):
-
+def print_to_log( **kwargs):
+    dag_id = "1234"
     pprint(kwargs)
     database = kwargs['database']
     table = kwargs['table']
