@@ -45,10 +45,6 @@ for dict in config:
 
         dop1 = DummyOperator(task_id='insert-new-row-' + dict)
         dop1.set_upstream(dop0)
-
-        """      
-        dop2 = BashOperator(task_id='dummy-sub-task-' + dict, bash_command='echo `date`')
-        """
         dop2 = DummyOperator(task_id='query-the-table-' + dict)
         dop2.set_upstream(dop1)
 
