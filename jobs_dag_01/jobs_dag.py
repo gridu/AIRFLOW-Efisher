@@ -29,19 +29,19 @@ def print_to_log(ti, **kwargs):
     return "[print_to_log] end"
 
 
-def check_table_exist(**kwargs):
+def check_table_exist(ti, **kwargs):
     table_exist = bool(random.getrandbits(1))
 
     if table_exist == True:
-        kwargs['ti'].xcom_push(table_exist=True)
+        ti.xcom_push(table_exist=True)
 
     else:
-        kwargs['ti'].xcom_push(table_exist=False)
+        ti.xcom_push(table_exist=False)
 
 
-def create_or_not_table(**kwargs):
+def create_or_not_table(ti, **kwargs):
 
-    ti = kwargs['ti']
+
     xcom_value = bool(ti.xcom_pull(table_exist=True))
 
     if xcom_value == True:
