@@ -37,6 +37,9 @@ for dict in config:
         'catchup': catchup
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval']) as dag:
+
+
+
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
@@ -44,9 +47,12 @@ for dict in config:
                               )
 
         dop1 = DummyOperator(task_id='insert-new-row-' + dict)
-        dop1.set_upstream(dop0)
+        dop0.set_downstream(dop1)
+
         dop2 = DummyOperator(task_id='query-the-table-' + dict)
-        dop2.set_upstream(dop1)
+        dop1.set_downstream(dop2)
+
+
 
     if dag:
         globals()[dict] = dag
