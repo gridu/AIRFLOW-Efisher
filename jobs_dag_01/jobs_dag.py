@@ -3,6 +3,8 @@ import random
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python_operator import BranchPythonOperator
+
 from datetime import datetime, timedelta
 
 concurrency = 2
