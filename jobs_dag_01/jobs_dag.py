@@ -30,12 +30,25 @@ def print_to_log(ti, **kwargs):
 def check_table_exist(**kwargs):
     table_exist = bool(random.getrandbits(1))
 
-    if (table_exist == True):
+    if table_exist == True:
         kwargs['ti'].xcom_push(table_exist=True)
-        return 'skip_table_creation'
+
     else:
         kwargs['ti'].xcom_push(table_exist=False)
+
+
+def create_or_not_table(**kwargs):
+
+    ti = kwargs['ti']
+    xcom_value = bool(ti.xcom_pull(table_exist=True))
+
+    if xcom_value == True:
+        print('This is DAG {}, creating table')
+        return 'skip_table_creation'
+    else:
+        print('This is DAG {}, skip creating table')
         return 'create_table'
+
 
 
 for dict in config:
@@ -49,22 +62,36 @@ for dict in config:
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval']) as dag:
 
-        dop0 = PythonOperator(task_id='python-task-' + dict,
+        dop00 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
 
-        dop01 = BranchPythonOperator(task_id='python-task-' + dict,
+        dop01 = PythonOperator(task_id='check-table-task-' + dict,
                                provide_context=True,
                                python_callable=check_table_exist()
                                )
+        dop01.set_upstream(dop00)
 
-        dop1 = DummyOperator(task_id='insert-new-row-' + dict)
-        dop1.set_upstream(dop0)
 
-        dop2 = DummyOperator(task_id='query-the-table-' + dict)
-        dop2.set_upstream(dop1)
+        dop02 = BranchPythonOperator(task_id='check-table-task-' + dict,
+                               provide_context=True,
+                               python_callable=ccreate_or_not_table()
+                               )
+
+        dop02.set_upstream(dop01)
+
+        dop03 = DummyOperator(task_id='create_table')
+        dop03.set_upstream(dop02)
+        dop04 = DummyOperator(task_id='skip_table_creation')
+        dop03.set_upstream(dop02)
+
+        dop05 = DummyOperator(task_id='insert-new-row-' + dict)
+        dop05.set_upstream(dop03, dop04)
+
+        dop06 = DummyOperator(task_id='query-the-table-' + dict)
+        dop06.set_upstream(dop05)
 
     if dag:
         globals()[dict] = dag
