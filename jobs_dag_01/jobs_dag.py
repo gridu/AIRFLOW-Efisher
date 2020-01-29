@@ -47,10 +47,10 @@ for dict in config:
                               )
 
         dop1 = DummyOperator(task_id='insert-new-row-' + dict)
-        dop0.set_downstream(dop1)
+        dop1.set_upstream(dop0)
 
         dop2 = DummyOperator(task_id='query-the-table-' + dict)
-        dop1.set_downstream(dop2)
+        dop2.set_upstream(dop1)
 
 
 
