@@ -41,7 +41,6 @@ def check_table_exist(ti, **kwargs):
 
 def create_or_not_table(ti, **kwargs):
 
-
     xcom_value = bool(ti.xcom_pull(table_exist=True))
 
     if xcom_value == True:
