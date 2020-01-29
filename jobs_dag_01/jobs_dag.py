@@ -1,8 +1,8 @@
 import airflow
+import random
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
 from airflow.operators.dummy_operator import DummyOperator
-
+from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
 
 concurrency = 2
@@ -27,6 +27,17 @@ def print_to_log(ti, **kwargs):
     return "[print_to_log] end"
 
 
+def check_table_exist(**kwargs):
+    table_exist = bool(random.getrandbits(1))
+
+    if (table_exist == True):
+        kwargs['ti'].xcom_push(table_exist=True)
+        return 'skip_table_creation'
+    else:
+        kwargs['ti'].xcom_push(table_exist=False)
+        return 'create_table'
+
+
 for dict in config:
     args = {
         'owner': 'airflow',
@@ -38,21 +49,22 @@ for dict in config:
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval']) as dag:
 
-
-
         dop0 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
 
+        dop01 = BranchPythonOperator(task_id='python-task-' + dict,
+                               provide_context=True,
+                               python_callable=check_table_exist()
+                               )
+
         dop1 = DummyOperator(task_id='insert-new-row-' + dict)
         dop1.set_upstream(dop0)
 
         dop2 = DummyOperator(task_id='query-the-table-' + dict)
         dop2.set_upstream(dop1)
-
-
 
     if dag:
         globals()[dict] = dag
