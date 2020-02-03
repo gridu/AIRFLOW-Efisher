@@ -40,6 +40,10 @@ for dict in config:
                                 fs_conn_id="fs_default",
                                 filepath="/tmp/trigger_it")
 
+        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1")
+
+        trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f /tmp/trigger_it')
+
 
     if dag:
         globals()[dict] = dag
