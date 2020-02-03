@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 
 
-concurrency = 4
+concurrency = 2
 catchup = False
 database = "our_test_db"
 
@@ -34,6 +34,7 @@ for dict in config:
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval'],
          start_date =config[dict]['start_date'],
          concurrency=concurrency,
+         catchup = catchup,
          max_active_runs =config[dict]['max_active_runs']) as dag:
 
         sensor000 = FileSensor(task_id="file_sensor_task",
