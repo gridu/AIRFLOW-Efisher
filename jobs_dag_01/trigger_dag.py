@@ -27,7 +27,7 @@ for dict in config:
         'start_date': config[dict]['start_date'],
         'dagrun_timeout': timedelta(minutes=10),
         'retries': 3,
-        'retry_delay': datetime.timedelta(hours=5)
+        'retry_delay': datetime.timedelta(hours=5),
         'poke_interval': 30
     }
 
