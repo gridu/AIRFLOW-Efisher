@@ -29,10 +29,12 @@ def print_to_log(ti, **kwargs):
     print("[print_to_log] %s start processing tables in database: %s.%s" % (dag_id, database, table))
     return "[print_to_log] end"
 
+def report_result(ti, **kwargs):
+        ti.xcom_push(key='all_done', value=True)
+        print('We are done')
 
 def check_table_exist(ti, **kwargs):
     table_exist = bool(random.getrandbits(1))
-
 
     if table_exist == True:
         ti.xcom_push(key='table_exist', value=True)
@@ -42,9 +44,7 @@ def check_table_exist(ti, **kwargs):
         ti.xcom_push(key='table_exist', value=False)
         print('Table doesnt exists')
 
-
 def create_or_not_table(ti, **kwargs):
-
 
     xcom_value = bool(ti.xcom_pull(key='table_exist'))
 
@@ -54,7 +54,6 @@ def create_or_not_table(ti, **kwargs):
     else:
         print('This is DAG {}, skip creating table')
         return 'create_table'
-
 
 
 for dict in config:
@@ -84,12 +83,10 @@ for dict in config:
                                )
         dop01.set_upstream(dop001)
 
-
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
                                provide_context=True,
                                python_callable=create_or_not_table
                                )
-
         dop02.set_upstream(dop01)
 
         dop03 = DummyOperator(task_id='create_table')
@@ -102,6 +99,13 @@ for dict in config:
 
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
         dop06.set_upstream(dop05)
+
+        dop07 = PythonOperator(task_id='last-task-' + dict,
+                               provide_context=True,
+                               python_callable=report_result
+                               )
+        dop07.set_upstream(dop06)
+
 
     if dag:
         globals()[dict] = dag
