@@ -73,7 +73,7 @@ for dict in config:
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
-        dop001 = BashOperator(task_id='bash-sub-task-' + dict, bash_command='echo $USER')
+        dop001 = BashOperator(task_id='bash-sub-task-' + dict, bash_command='echo "${USER}"')
         dop001.set_upstream(dop00)
 
         dop01 = PythonOperator(task_id='check-table-task-' + dict,
