@@ -34,10 +34,10 @@ def check_table_exist(ti, **kwargs):
 
 
     if table_exist == True:
-        ti.xcom_push(table_exist)
+        ti.xcom_push(key=table_exist, value=True)
 
     else:
-        ti.xcom_push(table_exist)
+        ti.xcom_push(key=table_exist, value=False)
 
 
 def create_or_not_table(ti, **kwargs):
