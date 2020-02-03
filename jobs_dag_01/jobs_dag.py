@@ -31,19 +31,19 @@ def print_to_log(ti, **kwargs):
 
 def check_table_exist(**kwargs):
     table_exist = bool(random.getrandbits(1))
-    ti = kwargs['ti']
+    dag_instance = kwargs['dag']
 
     if table_exist == True:
-        ti.xcom_push(table_exist=True)
+        dag_instance.xcom_push(table_exist=True)
 
     else:
-        ti.xcom_push(table_exist=False)
+        dag_instance.xcom_push(table_exist=False)
 
 
 def create_or_not_table(**kwargs):
 
-    ti = kwargs['ti']
-    xcom_value = bool(ti.xcom_pull(table_exist))
+    dag_instance = kwargs['dag']
+    xcom_value = bool(dag_instance.xcom_pull(table_exist))
 
     if xcom_value == True:
         print('This is DAG {}, creating table')
