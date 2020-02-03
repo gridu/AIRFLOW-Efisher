@@ -41,7 +41,7 @@ def check_table_exist(ti, **kwargs):
 
 def create_or_not_table(ti, **kwargs):
 
-    xcom_value = bool(ti.xcom_pull(table_exist=True))
+    xcom_value = bool(ti.xcom_pull(table_exist))
 
     if xcom_value == True:
         print('This is DAG {}, creating table')
@@ -76,9 +76,9 @@ for dict in config:
         dop01.set_upstream(dop00)
 
 
-        dop02 = BranchPythonOperator(task_id='check-table-task-' + dict,
+        dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
                                provide_context=True,
-                               python_callable=ccreate_or_not_table()
+                               python_callable=create_or_not_table()
                                )
 
         dop02.set_upstream(dop01)
