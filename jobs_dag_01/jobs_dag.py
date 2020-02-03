@@ -65,9 +65,10 @@ for dict in config:
         'concurrency': concurrency,
         'catchup': catchup
     }
-    with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval'],
-             start_date=config[dict]['start_date'],
-             max_active_runs=config[dict]['max_active_runs']) as dag:
+    with DAG(dag_id = dict, default_args = args, schedule_interval = config[dict]['schedule_interval'],
+             start_date = config[dict]['start_date'],
+             concurrency= concurrency,
+             max_active_runs = config[dict]['max_active_runs']) as dag:
 
         dop00 = PythonOperator(task_id='python-task-' + dict,
                               provide_context=True,
