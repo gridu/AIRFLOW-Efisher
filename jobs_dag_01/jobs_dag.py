@@ -8,7 +8,7 @@ from airflow.operators.bash_operator import BashOperator
 
 from datetime import datetime, timedelta
 
-concurrency = 2
+concurrency = 4
 catchup = False
 database = "our_test_db"
 
