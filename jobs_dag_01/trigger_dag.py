@@ -37,7 +37,6 @@ for dict in config:
          max_active_runs =config[dict]['max_active_runs']) as dag:
 
         sensor000 = FileSensor(task_id="file_sensor_task",
-                                poke_interval=default_args['poke_interval'],
                                 fs_conn_id="fs_default",
                                 filepath="/tmp/trigger_it")
 
