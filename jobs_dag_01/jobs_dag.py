@@ -88,7 +88,7 @@ for dict in config:
         dop03 = DummyOperator(task_id='create_table')
         dop03.set_upstream(dop02)
         dop04 = DummyOperator(task_id='skip_table_creation')
-        dop03.set_upstream(dop02)
+        dop04.set_upstream(dop02)
 
         dop05 = DummyOperator(task_id='insert-new-row-' + dict)
         dop03.set_downstream(dop05)
