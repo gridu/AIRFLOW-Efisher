@@ -1,7 +1,7 @@
 import airflow
 from airflow import DAG
 
-from airflow.contrib.sensors import file_sensor
+from airflow.contrib.sensors.file_sensor import FileSensor
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.bash_operator import BashOperator
 
