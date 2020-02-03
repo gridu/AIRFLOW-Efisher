@@ -100,7 +100,7 @@ for dict in config:
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
         dop06.set_upstream(dop05)
 
-        dop07 = PythonOperator(task_id='last-task-' + dict,
+        dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
                                python_callable=report_result
                                )

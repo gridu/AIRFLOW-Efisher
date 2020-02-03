@@ -2,6 +2,7 @@ import airflow
 from airflow import DAG
 
 from airflow.contrib.sensors.file_sensor import FileSensor
+from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.bash_operator import BashOperator
 
@@ -44,8 +45,17 @@ for dict in config:
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1")
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f /tmp/trigger_it')
 
+        external_check = ExternalTaskSensor(
+            task_id='check_dag_id_1',
+            external_dag_id='dag_id_1',
+            external_task_id='last-task',
+            allowed_states=['success'],
+        )
+
+
         trigger_on_000.set_upstream(sensor000)
-        trigger_off_000.set_upstream(trigger_on_000)
+        external_check.set_upstream(trigger_on_000)
+        trigger_off_000.set_upstream(external_check)
 
     if dag:
         globals()[dict] = dag
