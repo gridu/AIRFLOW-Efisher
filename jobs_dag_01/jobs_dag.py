@@ -91,7 +91,8 @@ for dict in config:
         dop03.set_upstream(dop02)
 
         dop05 = DummyOperator(task_id='insert-new-row-' + dict)
-        dop05.set_upstream(dop03, dop04)
+        dop03.set_downstream(dp05)
+        dop04.set_downstream(dp05)
 
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
         dop06.set_upstream(dop05)
