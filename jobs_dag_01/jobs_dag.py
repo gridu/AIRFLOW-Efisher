@@ -29,21 +29,21 @@ def print_to_log(ti, **kwargs):
     return "[print_to_log] end"
 
 
-def check_table_exist(**kwargs):
+def check_table_exist(ti, **kwargs):
     table_exist = bool(random.getrandbits(1))
-    dag_instance = kwargs['dag']
+
 
     if table_exist == True:
-        dag_instance.xcom_push(table_exist=True)
+        ti.xcom_push(table_exist=True)
 
     else:
-        dag_instance.xcom_push(table_exist=False)
+        ti.xcom_push(table_exist=False)
 
 
-def create_or_not_table(**kwargs):
+def create_or_not_table(ti, **kwargs):
 
-    dag_instance = kwargs['dag']
-    xcom_value = bool(dag_instance.xcom_pull(table_exist))
+
+    xcom_value = bool(ti.xcom_pull(table_exist))
 
     if xcom_value == True:
         print('This is DAG {}, creating table')
@@ -73,14 +73,14 @@ for dict in config:
 
         dop01 = PythonOperator(task_id='check-table-task-' + dict,
                                provide_context=True,
-                               python_callable=check_table_exist()
+                               python_callable=check_table_exist
                                )
         dop01.set_upstream(dop00)
 
 
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
                                provide_context=True,
-                               python_callable=create_or_not_table()
+                               python_callable=create_or_not_table
                                )
 
         dop02.set_upstream(dop01)
