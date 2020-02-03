@@ -13,7 +13,7 @@ catchup = False
 database = "our_test_db"
 
 config = {
-    'dag_id_1': {'schedule_interval': timedelta(minutes=45), 'start_date': datetime(2020, 2, 3), 'max_active_runs': 1,
+    'dag_id_1': {'schedule_interval': timedelta(minutes=45), 'start_date': '@once', 'max_active_runs': 1,
                  "table_name": "table_num_1"},
     'dag_id_2': {'schedule_interval': timedelta(minutes=40), 'start_date': airflow.utils.dates.days_ago(1),
                  'max_active_runs': 1, "table_name": "table_num_2"},

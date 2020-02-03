@@ -41,7 +41,6 @@ for dict in config:
                                 filepath="/tmp/trigger_it")
 
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1")
-
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f /tmp/trigger_it')
 
 
