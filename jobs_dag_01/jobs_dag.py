@@ -92,7 +92,7 @@ for dict in config:
         dop04 = DummyOperator(task_id='skip_table_creation')
         dop04.set_upstream(dop02)
 
-        dop05 = DummyOperator(task_id='insert-new-row-' + dict)
+        dop05 = DummyOperator(task_id='insert-new-row-' + dict, trigger_rule='none_failed')
         dop03.set_downstream(dop05)
         dop04.set_downstream(dop05)
 
