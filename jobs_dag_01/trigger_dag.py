@@ -50,7 +50,7 @@ for dict in config:
             external_dag_id='dag_id_1',
             external_task_id='last-task',
             allowed_states=['success'],
-            execution_date_fn=lambda ds: ds + timedelta(0),
+            execution_date_fn=lambda start_date: start_date + timedelta(0),
         )
 
 
