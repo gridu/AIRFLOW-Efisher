@@ -72,12 +72,14 @@ for dict in config:
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
+        dop001 = BashOperator(task_id='bash-sub-task-' + dict, bash_command='echo $USER')
+        dop001.set_upstream(dop00)
 
         dop01 = PythonOperator(task_id='check-table-task-' + dict,
                                provide_context=True,
                                python_callable=check_table_exist
                                )
-        dop01.set_upstream(dop00)
+        dop01.set_upstream(dop001)
 
 
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
