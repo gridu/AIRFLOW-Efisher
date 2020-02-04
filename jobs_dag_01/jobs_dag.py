@@ -6,7 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.operators.bash_operator import BashOperator
 
-from datetime import datetime, date, time, timezone, timedelta
+from datetime import datetime, date, time, tzinfo, timedelta
 
 concurrency = 4
 catchup = False
