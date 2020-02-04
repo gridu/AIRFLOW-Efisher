@@ -6,14 +6,14 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.operators.bash_operator import BashOperator
 
-from datetime import datetime, timedelta
+from datetime import datetime, date, time, timezone, timedelta
 
-concurrency = 2
+concurrency = 4
 catchup = False
 database = "our_test_db"
 
 config = {
-    'dag_id_1': {'schedule_interval': None, 'start_date': datetime(2020, 2, 3, 9, 0, 0), 'max_active_runs': 1,
+    'dag_id_1': {'schedule_interval': None, 'start_date': datetime(2020, 2, 3, 9, 0, 0, 0, tzinfo=datetime.timezone.utc), 'max_active_runs': 1,
                  "table_name": "table_num_1"},
     'dag_id_2': {'schedule_interval': timedelta(minutes=40), 'start_date': airflow.utils.dates.days_ago(1),
                  'max_active_runs': 1, "table_name": "table_num_2"},
@@ -59,10 +59,7 @@ def create_or_not_table(ti, **kwargs):
 for dict in config:
     args = {
         'owner': 'airflow',
-        'start_date': config[dict]['start_date'],
         'dagrun_timeout': timedelta(minutes=10),
-        'concurrency': concurrency,
-        'catchup': catchup
     }
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval'],
              start_date=config[dict]['start_date'],
