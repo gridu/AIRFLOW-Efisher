@@ -16,7 +16,7 @@ database = "our_test_db"
 
 config = {
     'triggered_dag_id_1': {'schedule_interval': timedelta(minutes=45),
-                           'start_date': datetime(2020, 2, 3),
+                           'start_date': datetime(2020, 2, 3, 9, 0, 0),
                            'max_active_runs': 1
                            }
 }
