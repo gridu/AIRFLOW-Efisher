@@ -55,7 +55,7 @@ for dict in config:
             task_id='check_dag_id_1',
             external_dag_id='dag_id_1',
             external_task_id=None,
-            execution_date_fn=lambda: UNIQUE_EXEC_DATE,
+            execution_date_fn=lambda start_date: UNIQUE_EXEC_DATE,
             allowed_states=['success']
         )
 
