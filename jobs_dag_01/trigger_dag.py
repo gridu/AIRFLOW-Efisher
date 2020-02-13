@@ -42,7 +42,7 @@ for dict in config:
          catchup = False,
          max_active_runs =config[dict]['max_active_runs']) as dag:
 
-        UNIQUE_EXEC_DATE = {{ next_execution_date }}
+        UNIQUE_EXEC_DATE = '{{ next_execution_date }}'
 
         sensor000 = FileSensor(task_id="file_sensor_task",
                                 fs_conn_id="fs_default",
