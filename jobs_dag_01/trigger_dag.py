@@ -34,9 +34,9 @@ for dict in config:
         'owner': 'airflow',
         'start_date': config[dict]['start_date'],
         'dagrun_timeout': timedelta(minutes=10),
-        'retries': 3,
+        'retries': 30,
         'retry_delay': timedelta(minutes=5),
-        'poke_interval': 30
+        'poke_interval': 60
     }
 
     with DAG(dag_id=dict,
