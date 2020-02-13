@@ -23,6 +23,9 @@ config = {
                            }
 }
 
+def get_date(**kwargs):
+    next_execution_date = '{{ next_execution_date }}'
+    return next_execution_date
 
 for dict in config:
     args = {
@@ -42,20 +45,20 @@ for dict in config:
          catchup = False,
          max_active_runs =config[dict]['max_active_runs']) as dag:
 
-        UNIQUE_EXEC_DATE = '{{ next_execution_date }}'
+
 
         sensor000 = FileSensor(task_id="file_sensor_task",
                                 fs_conn_id="fs_default",
                                 filepath=trigger_path)
 
-        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date=UNIQUE_EXEC_DATE)
+        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date=get_date())
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
 
         external_check = ExternalTaskSensor(
             task_id='check_dag_id_1',
             external_dag_id='dag_id_1',
             external_task_id=None,
-            execution_date_fn=lambda start_date: UNIQUE_EXEC_DATE,
+            execution_date_fn=get_date,
             allowed_states=['success']
         )
 
