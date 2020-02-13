@@ -25,7 +25,6 @@ config = {
 
 def get_date(execution_date,**kwargs):
     next_execution_date = '{{ next_execution_date }}'
-    print ("{}".format(next_execution_date))
     return next_execution_date
 
 for dict in config:
