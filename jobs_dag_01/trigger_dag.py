@@ -33,7 +33,7 @@ for dict in config:
         'retry_delay': timedelta(minutes=5),
         'poke_interval': 30
     }
-    UNIQUE_EXEC_DATE = datetime.now()
+
     with DAG(dag_id=dict,
          default_args=args,
          schedule_interval=config[dict]['schedule_interval'],
@@ -41,6 +41,8 @@ for dict in config:
          concurrency=concurrency,
          catchup = False,
          max_active_runs =config[dict]['max_active_runs']) as dag:
+
+        UNIQUE_EXEC_DATE = {{ next_execution_date }}
 
         sensor000 = FileSensor(task_id="file_sensor_task",
                                 fs_conn_id="fs_default",
@@ -53,6 +55,7 @@ for dict in config:
             task_id='check_dag_id_1',
             external_dag_id='dag_id_1',
             external_task_id=None,
+            execution_date_fn=lambda: UNIQUE_EXEC_DATE,
             allowed_states=['success']
         )
 
