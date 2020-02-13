@@ -23,14 +23,11 @@ config = {
                            }
 }
 
+def get_date(execution_date,**kwargs):
 
-class get_date:
-    template_fields = ['next_execution_date']
-
-    def __init__(self, execution_date, ned='{{next_execution_date}}'):
-        self.next_execution_date = ned
-        print("{}".format(self.next_execution_date))
-        return self.next_execution_date
+    next_execution_date = {execution_date
+    print ("{}->{}".format(execution_date,next_execution_date))
+    return next_execution_date
 
 for dict in config:
     args = {
@@ -56,7 +53,7 @@ for dict in config:
                                 fs_conn_id="fs_default",
                                 filepath=trigger_path)
 
-        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ next_execution_date }}')
+        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ execution_date }}')
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
 
         external_check = ExternalTaskSensor(
