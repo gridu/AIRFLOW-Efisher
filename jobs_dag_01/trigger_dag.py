@@ -25,7 +25,7 @@ config = {
 
 def get_date(execution_date,**kwargs):
 
-    next_execution_date = {execution_date
+    next_execution_date = execution_date
     print ("{}->{}".format(execution_date,next_execution_date))
     return next_execution_date
 
