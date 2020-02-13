@@ -25,6 +25,7 @@ config = {
 
 def get_date(**kwargs):
     next_execution_date = '{{ next_execution_date }}'
+    print ("{}".format(next_execution_date))
     return next_execution_date
 
 for dict in config:
@@ -51,7 +52,7 @@ for dict in config:
                                 fs_conn_id="fs_default",
                                 filepath=trigger_path)
 
-        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date=datetime(get_date))
+        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ next_execution_date }}')
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
 
         external_check = ExternalTaskSensor(
