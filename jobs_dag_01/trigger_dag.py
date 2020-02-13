@@ -55,7 +55,7 @@ for dict in config:
                                 filepath=trigger_path)
 
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ execution_date }}')
-        trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
+        trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{ trigger_path }}')
 
         external_check = ExternalTaskSensor(
             task_id='check_dag_id_1',
