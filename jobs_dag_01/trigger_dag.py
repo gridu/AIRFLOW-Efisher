@@ -51,6 +51,7 @@ for dict in config:
 
         sensor000 = FileSensor(task_id="file_sensor_task",
                                 fs_conn_id="fs_default",
+                                mode="reschedule",
                                 filepath=trigger_path)
 
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ execution_date }}')
@@ -61,6 +62,7 @@ for dict in config:
             external_dag_id='dag_id_1',
             external_task_id=None,
             execution_date_fn=get_date,
+            mode="reschedule",
             allowed_states=['success']
         )
 
