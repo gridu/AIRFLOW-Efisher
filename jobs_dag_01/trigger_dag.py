@@ -39,6 +39,7 @@ for dict in config:
          schedule_interval=config[dict]['schedule_interval'],
          start_date =config[dict]['start_date'],
          concurrency=concurrency,
+         catchup = False,
          max_active_runs =config[dict]['max_active_runs']) as dag:
 
         sensor000 = FileSensor(task_id="file_sensor_task",

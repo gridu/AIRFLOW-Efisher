@@ -62,6 +62,7 @@ for dict in config:
     with DAG(dag_id=dict, default_args=args, schedule_interval=config[dict]['schedule_interval'],
              start_date=config[dict]['start_date'],
              concurrency=concurrency,
+             catchup = False,
              max_active_runs=config[dict]['max_active_runs']) as dag:
 
         dop00 = PythonOperator(task_id='python-task-' + dict,
