@@ -23,11 +23,14 @@ config = {
                            }
 }
 
-def get_date(execution_date,**kwargs):
 
-    next_execution_date = kwargs['next_execution_date']
-    print ("{}->{}".format(execution_date,next_execution_date))
-    return next_execution_date
+class get_date:
+    template_fields = ['next_execution_date']
+
+    def __init__(self, execution_date, ned='{{next_execution_date}}'):
+        self.next_execution_date = ned
+        print("{}".format(self.next_execution_date))
+        return self.next_execution_date
 
 for dict in config:
     args = {
