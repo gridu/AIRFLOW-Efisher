@@ -8,7 +8,9 @@ from airflow.operators.bash_operator import BashOperator
 
 from datetime import datetime, date, time, tzinfo, timezone, timedelta
 
+from airflow.models import Variable
 
+trigger_path = Variable.get("trigger_path_var", default_var='/tmp/trigger_it')
 
 concurrency = 4
 catchup = False
@@ -41,10 +43,10 @@ for dict in config:
 
         sensor000 = FileSensor(task_id="file_sensor_task",
                                 fs_conn_id="fs_default",
-                                filepath="/tmp/trigger_it")
+                                filepath=trigger_path)
 
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1")
-        trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f /tmp/trigger_it')
+        trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
 
         external_check = ExternalTaskSensor(
             task_id='check_dag_id_1',
