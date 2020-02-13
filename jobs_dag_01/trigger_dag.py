@@ -33,7 +33,7 @@ for dict in config:
         'retry_delay': timedelta(minutes=5),
         'poke_interval': 30
     }
-
+    UNIQUE_EXEC_DATE = datetime.now()
     with DAG(dag_id=dict,
          default_args=args,
          schedule_interval=config[dict]['schedule_interval'],
@@ -45,13 +45,13 @@ for dict in config:
                                 fs_conn_id="fs_default",
                                 filepath=trigger_path)
 
-        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1")
+        trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date=UNIQUE_EXEC_DATE)
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{trigger_path}}')
 
         external_check = ExternalTaskSensor(
             task_id='check_dag_id_1',
             external_dag_id='dag_id_1',
-            external_task_id='last-task',
+            external_task_id=None,
             allowed_states=['success']
         )
 
