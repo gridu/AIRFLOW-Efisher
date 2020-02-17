@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.subdag_operator import SubDagOperator
 
-from datetime import datetime, date, timezone, timedelta
+from datetime import datetime, timezone, timedelta
 
 concurrency = 4
 catchup = False
@@ -15,18 +15,17 @@ config = {
 }
 
 
-def load_subdag(parent_dag_name, child_dag_name,args):
+def load_subdag(parent_dag_name, child_dag_name, args):
     dag_subdag = DAG(
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
         default_args=args,
     )
     with dag_subdag:
-        for i in range(5):
-            t = DummyOperator(
-                task_id='load_subdag_{0}'.format(i),
-                default_args=args,
-                dag=dag_subdag,
-            )
+        t = DummyOperator(
+            task_id='load_subdag_1',
+            default_args=args,
+            dag=dag_subdag,
+        )
 
     return dag_subdag
 
@@ -51,7 +50,7 @@ for dict in config:
 
         sub_dag = SubDagOperator(
             subdag=load_subdag('{0}'.format(dict), '{0}_subdag'.format(dict), args),
-            task_id='xcom_canvas_subdag',
+            task_id='{0}_subdag'.format(dict),
         )
 
         """
