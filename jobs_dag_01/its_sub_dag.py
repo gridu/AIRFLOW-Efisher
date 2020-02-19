@@ -43,9 +43,9 @@ def load_subdag(parent_dag_name, child_dag_name, args):
                                       default_args=args,
                                       dag=dag_subdag
                                       )
-    external_check >> print_result
+        external_check >> print_result
 
-return dag_subdag
+    return dag_subdag
 
 for dict in config:
     args = {
