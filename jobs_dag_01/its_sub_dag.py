@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.sensors.external_task_sensor import ExternalTaskSensor
+from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timezone, timedelta
 
 concurrency = 4
