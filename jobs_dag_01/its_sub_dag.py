@@ -15,9 +15,6 @@ config = {
                              }
 }
 
-def print_result(ti, **kwargs):
-    ti.xcom_push(key='all_done', value=True)
-    print('We are done')
 
 def get_date(execution_date,**kwargs):
 
@@ -26,6 +23,11 @@ def get_date(execution_date,**kwargs):
     return next_execution_date
 
 def load_subdag(parent_dag_name, child_dag_name, args):
+
+    def print_result(ti, **kwargs):
+        ti.xcom_push(key='all_done', value=True)
+    print('We are done')
+
     dag_subdag = DAG(
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
         default_args=args,
