@@ -15,6 +15,10 @@ config = {
                              }
 }
 
+def print_result(ti, **kwargs):
+    ti.xcom_push(key='all_done', value=True)
+    print('We are done')
+
 def get_date(execution_date,**kwargs):
 
     next_execution_date = execution_date
