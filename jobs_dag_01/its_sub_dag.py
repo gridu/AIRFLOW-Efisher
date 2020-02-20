@@ -87,8 +87,6 @@ for dict in config:
              start_date=config[dict]['start_date'],
              concurrency=concurrency,
              catchup=False,
-             retry_delay=timedelta(minutes=5),
-             poke_interval=60,
              max_active_runs=config[dict]['max_active_runs']) as dag:
 
         sub_dag = SubDagOperator(
