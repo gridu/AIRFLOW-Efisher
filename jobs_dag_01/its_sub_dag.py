@@ -24,6 +24,15 @@ def get_date(execution_date,**kwargs):
 
 def load_subdag(parent_dag_name, child_dag_name, args):
 
+    args = {
+        'owner': 'airflow',
+        'start_date': config[dict]['start_date'],
+        'dagrun_timeout': timedelta(minutes=10),
+        'retries': 30,
+        'retry_delay': timedelta(minutes=5),
+        'poke_interval': 60
+    }
+
     def print_result(ti, **kwargs):
         ti.xcom_push(key='all_done', value=True)
     print('We are done')
@@ -31,10 +40,7 @@ def load_subdag(parent_dag_name, child_dag_name, args):
     dag_subdag = DAG(
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
         default_args=args,
-        catchup=False,
-        concurrency=concurrency,
-        retry_delay=timedelta(minutes=5),
-        poke_interval=60
+        catchup=False
         )
 
     with dag_subdag:
