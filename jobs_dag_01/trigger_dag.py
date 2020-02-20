@@ -11,7 +11,7 @@ from datetime import datetime, date, time, tzinfo, timezone, timedelta
 
 from airflow.models import Variable
 
-from its_sub_dag import load_subdag
+from jobs_dag_01/its_sub_dag import load_subdag
 
 trigger_path = Variable.get("trigger_path_var", default_var='/tmp/trigger_it')
 
