@@ -32,8 +32,11 @@ def load_subdag(parent_dag_name, child_dag_name, args):
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
         default_args=args,
         catchup=False,
-        concurrency=concurrency
-    )
+        concurrency=concurrency,
+        retry_delay=timedelta(minutes=5),
+        poke_interval=60
+        )
+
     with dag_subdag:
         t = DummyOperator(
             task_id='load_subdag_{0}'.format(child_dag_name),
@@ -78,6 +81,9 @@ for dict in config:
              start_date=config[dict]['start_date'],
              concurrency=concurrency,
              catchup=False,
+             concurrency=concurrency,
+             retry_delay=timedelta(minutes=5),
+             poke_interval=60,
              max_active_runs=config[dict]['max_active_runs']) as dag:
 
         sub_dag = SubDagOperator(
