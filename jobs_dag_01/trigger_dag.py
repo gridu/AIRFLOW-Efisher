@@ -64,7 +64,7 @@ for dict in config:
 
         sensor000 >> trigger_on_000 >>  sub_dag
 
-         """
+        """
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{ trigger_path }}')
 
         external_check = ExternalTaskSensor(
