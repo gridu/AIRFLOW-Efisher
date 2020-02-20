@@ -5,6 +5,7 @@ from airflow.contrib.sensors.file_sensor import FileSensor
 from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.bash_operator import BashOperator
+from airflow.operators.subdag_operator import SubDagOperator
 
 from datetime import datetime, date, time, tzinfo, timezone, timedelta
 
@@ -55,6 +56,15 @@ for dict in config:
                                 filepath=trigger_path)
 
         trigger_on_000 = TriggerDagRunOperator(task_id="trigger_on", trigger_dag_id="dag_id_1", execution_date='{{ execution_date }}')
+
+        sub_dag = SubDagOperator(
+            subdag=load_subdag('{0}'.format(dict), '{0}_subdag'.format(dict), args),
+            task_id='{0}_subdag'.format(dict),
+        )
+
+        sensor000 >> trigger_on_000 >>  sub_dag
+
+         """
         trigger_off_000 = BashOperator(task_id='trigger_off', bash_command='rm -f {{ trigger_path }}')
 
         external_check = ExternalTaskSensor(
@@ -70,7 +80,7 @@ for dict in config:
         trigger_on_000.set_upstream(sensor000)
         external_check.set_upstream(trigger_on_000)
         trigger_off_000.set_upstream(external_check)
-
+        """
     if dag:
         globals()[dict] = dag
     else:

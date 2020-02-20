@@ -62,7 +62,7 @@ def load_subdag(parent_dag_name, child_dag_name, args):
         t>>external_check >> print_result
 
     return dag_subdag
-
+"""
 for dict in config:
     args = {
         'owner': 'airflow',
@@ -72,7 +72,7 @@ for dict in config:
         'retry_delay': timedelta(minutes=5),
         'poke_interval': 60
     }
-
+    
     with DAG(dag_id=dict,
              default_args=args,
              schedule_interval=config[dict]['schedule_interval'],
@@ -90,3 +90,4 @@ for dict in config:
         globals()[dict] = dag
     else:
         print("Finished")
+"""
