@@ -31,6 +31,8 @@ def load_subdag(parent_dag_name, child_dag_name, args):
     dag_subdag = DAG(
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
         default_args=args,
+        catchup = False,
+        concurrency=concurrency
     )
     with dag_subdag:
         t = DummyOperator(
