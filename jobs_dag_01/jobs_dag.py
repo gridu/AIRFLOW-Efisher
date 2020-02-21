@@ -6,6 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.operators.bash_operator import BashOperator
 from airflow.hooks.postgres_hook import PostgresHook
+from airflow.operators.postgres_operator import PostgresOperator
 
 import random
 from datetime import datetime, date, time, tzinfo,timezone, timedelta
@@ -18,7 +19,7 @@ config = {
     'dag_id_1': {'schedule_interval': timedelta(minutes=45),
                  'start_date': datetime(2020, 2, 3, 9, 0, 0, 0, tzinfo=timezone.utc),
                  'max_active_runs': 1,
-                 "table_name": "connections"},
+                 "table_name": "gridu_table"},
 }
 
 
@@ -93,10 +94,10 @@ for dict in config:
              max_active_runs=config[dict]['max_active_runs']) as dag:
 
         dop00 = PythonOperator(task_id='python-task-' + dict,
-                              provide_context=True,
-                              op_kwargs={'database': database, 'table': config[dict]['table_name']},
-                              python_callable=print_to_log
-                              )
+                               provide_context=True,
+                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
+                               python_callable=print_to_log
+                               )
 
         dop001 = BashOperator(task_id='report-user-sub-task-' + dict, bash_command='echo "${USER}"', xcom_push=True)
 
@@ -110,11 +111,15 @@ for dict in config:
                                )
 
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
-                               provide_context=True,
-                               python_callable=create_or_not_table
-                               )
+                                     provide_context=True,
+                                     python_callable=create_or_not_table
+                                     )
 
-        dop03 = DummyOperator(task_id='create_table')
+        dop03 = PostgresOperator(task_id='create_table',
+                                 sql='''CREATE TABLE {}(
+                                 custom_id integer NOT NULL, timestamp TIMESTAMP NOT NULL, user_id VARCHAR (50) NOT NULL
+                                 );'''.format(config[dict]['table_name']),
+                                 )
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
