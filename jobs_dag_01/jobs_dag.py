@@ -113,7 +113,7 @@ for dict in config:
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
-        reported_user = kwargs['ti'].xcom_pull(task_ids="report-user-sub-task-" + dict)
+        reported_user = '{{ ti.xcom_pull(task_ids="report-user-sub-task-dag_id_1) }}'
 
         dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
                                  trigger_rule='none_failed',
