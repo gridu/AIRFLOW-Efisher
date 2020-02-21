@@ -29,8 +29,9 @@ def print_to_log(ti, **kwargs):
     return "[print_to_log] end"
 
 def report_result(ti, **kwargs):
+        run_id = kwargs['run_id']
         ti.xcom_push(key='all_done', value='{{ run_id }} ended')
-        print('We are done. {{ run_id }} ended')
+        print('We are done. {} ended'.format(run_id))
 
 def check_table_exist(ti, **kwargs):
     table_exist = bool(random.getrandbits(1))
@@ -99,7 +100,7 @@ for dict in config:
 
         dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
-                               python_callable=report_result
+                               python_callable=report_result,
                                )
         #dop07.set_upstream(dop06)
 
