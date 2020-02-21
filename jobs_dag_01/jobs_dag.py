@@ -126,7 +126,7 @@ for dict in config:
 
         dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
                                  trigger_rule='none_failed',
-                                 sql='''INSERT INTO {} VALUES({}, {}, {});''',
+                                 sql='''INSERT INTO %s VALUES(%s, %s, %s);''',
                                  parameters=(config[dict]['table_name'], uuid.uuid4().int % 123456789,
                                              datetime.now(), uuid.uuid4().hex[:10])
                                  )
