@@ -33,6 +33,10 @@ def load_subdag(parent_dag_name, child_dag_name, args):
     def print_result(ti, **kwargs):
         xcom_value = (ti.xcom_pull(key='all_done', dag_id='dag_id_1'))
         print('This is {} - We are done'.format(xcom_value))
+        pprint('context: {}'.format(kwargs))
+        print('ti: {}'.format(ti))
+        return 'Whatever you return gets printed in the logs'
+
 
     dag_subdag = DAG(
         dag_id='{0}.{1}'.format(parent_dag_name, child_dag_name),
