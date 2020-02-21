@@ -72,37 +72,31 @@ for dict in config:
                               op_kwargs={'database': database, 'table': config[dict]['table_name']},
                               python_callable=print_to_log
                               )
-        dop001 = BashOperator(task_id='bash-sub-task-' + dict, bash_command='echo "Running under user: ${USER}"')
-        #dop001.set_upstream(dop00)
+
+        dop001 = BashOperator(task_id='report-user-sub-task-' + dict, bash_command='echo "${USER}"', xcom_push=True)
 
         dop01 = PythonOperator(task_id='check-table-task-' + dict,
                                provide_context=True,
                                python_callable=check_table_exist
                                )
-        #dop01.set_upstream(dop001)
 
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
                                provide_context=True,
                                python_callable=create_or_not_table
                                )
-        #dop02.set_upstream(dop01)
 
         dop03 = DummyOperator(task_id='create_table')
-        #dop03.set_upstream(dop02)
+
         dop04 = DummyOperator(task_id='skip_table_creation')
-        #dop04.set_upstream(dop02)
 
         dop05 = DummyOperator(task_id='insert-new-row-' + dict, trigger_rule='none_failed')
-        #dop05.set_upstream([dop03, dop04])
 
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
-        #dop06.set_upstream(dop05)
 
         dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
                                python_callable=report_result,
                                )
-        #dop07.set_upstream(dop06)
 
         dop00 >> dop001 >> dop01>> dop02 >> [dop03, dop04] >> dop05 >> dop06 >> dop07
 
