@@ -37,7 +37,7 @@ def report_result(ti, **kwargs):
         print('We are done. {} ended'.format(run_id))
 
 
-def check_table_exist(ti, sql_to_get_schema, sql_to_check_table_exist, table_name, **kwargs):
+def check_table_exist(sql_to_get_schema, sql_to_check_table_exist, table_name, **kwargs):
 
     """ callable function to get schema name and after that check if table exist """
     hook = PostgresHook()
