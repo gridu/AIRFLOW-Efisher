@@ -67,7 +67,10 @@ def load_subdag(parent_dag_name, child_dag_name, args):
 
         trigger_off = BashOperator(task_id='trigger_off', bash_command='rm -f {}'.format(trigger_path))
 
-        t >> external_check >> print_result >> trigger_off
+        timestamp = '{{ ts_nodash }}'
+        result_file = BashOperator(task_id='trigger_off', bash_command='touch /tmp/finished_#{}'.format(timestamp))
+
+        t >> external_check >> print_result >> trigger_off >> result_file
 
     return dag_subdag
 """
