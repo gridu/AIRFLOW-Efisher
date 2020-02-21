@@ -119,7 +119,7 @@ for dict in config:
                                  trigger_rule='none_failed',
                                  sql='''INSERT INTO {} VALUES(%s, %s, %s);'''.format(config[dict]['table_name']),
                                  parameters=(uuid.uuid4().int % 123456789,
-                                             datetime.now(), reported_user
+                                             datetime.now(), "{}".format(reported_user)
                                              )
                                  )
 
