@@ -5,6 +5,7 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.python_operator import BranchPythonOperator
 from airflow.operators.bash_operator import BashOperator
+from airflow.hooks.postgres_hook import PostgresHook
 
 import random
 from datetime import datetime, date, time, tzinfo,timezone, timedelta
@@ -17,7 +18,7 @@ config = {
     'dag_id_1': {'schedule_interval': timedelta(minutes=45),
                  'start_date': datetime(2020, 2, 3, 9, 0, 0, 0, tzinfo=timezone.utc),
                  'max_active_runs': 1,
-                 "table_name": "table_num_1"},
+                 "table_name": "connections"},
 }
 
 
@@ -33,7 +34,31 @@ def report_result(ti, **kwargs):
         ti.xcom_push(key='all_done', value='{} ended'.format(run_id))
         print('We are done. {} ended'.format(run_id))
 
-def check_table_exist(ti, **kwargs):
+
+def check_table_exist(ti, sql_to_get_schema, sql_to_check_table_exist, table_name, **kwargs):
+
+    """ callable function to get schema name and after that check if table exist """
+    hook = PostgresHook()
+    # get schema name
+    query = hook.get_records(sql=sql_to_get_schema)
+    for result in query:
+        if 'airflow' in result:
+            schema = result[0]
+            print(schema)
+            break
+    # check table exist
+    query = hook.get_first(sql=sql_to_check_table_exist.format(schema, table_name))
+    print(query)
+    if query:
+        ti.xcom_push(key='table_exist', value=True)
+        print('Table exists')
+
+    else:
+        ti.xcom_push(key='table_exist', value=False)
+        print('Table doesnt exists')
+
+
+    """
     table_exist = bool(random.getrandbits(1))
 
     if table_exist == True:
@@ -43,7 +68,7 @@ def check_table_exist(ti, **kwargs):
     else:
         ti.xcom_push(key='table_exist', value=False)
         print('Table doesnt exists')
-
+    """
 def create_or_not_table(ti, **kwargs):
 
     xcom_value = bool(ti.xcom_pull(key='table_exist'))
@@ -77,7 +102,11 @@ for dict in config:
 
         dop01 = PythonOperator(task_id='check-table-task-' + dict,
                                provide_context=True,
-                               python_callable=check_table_exist
+                               python_callable=check_table_exist,
+                               op_args=["SELECT * FROM pg_tables;",
+                                        "SELECT * FROM information_schema.tables "
+                                        "WHERE table_schema = '{}'"
+                                        "AND table_name = '{}';", config[dict]['table_name']]
                                )
 
         dop02 = BranchPythonOperator(task_id='create_or_not_table' + dict,
