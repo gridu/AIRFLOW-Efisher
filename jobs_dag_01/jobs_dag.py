@@ -20,7 +20,7 @@ config = {
     'dag_id_1': {'schedule_interval': timedelta(minutes=45),
                  'start_date': datetime(2020, 2, 3, 9, 0, 0, 0, tzinfo=timezone.utc),
                  'max_active_runs': 1,
-                 "table_name": "gridu_table"},
+                 "table_name": 'gridu_table'},
 }
 
 
