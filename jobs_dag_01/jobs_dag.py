@@ -10,6 +10,7 @@ from airflow.operators.postgres_operator import PostgresOperator
 
 import random
 from datetime import datetime, date, time, tzinfo,timezone, timedelta
+import uuid
 
 concurrency = 4
 catchup = False
@@ -118,12 +119,17 @@ for dict in config:
         dop03 = PostgresOperator(task_id='create_table',
                                  sql='''CREATE TABLE {}(
                                  custom_id integer NOT NULL, timestamp TIMESTAMP NOT NULL, user_id VARCHAR (50) NOT NULL
-                                 );'''.format(config[dict]['table_name']),
+                                 );'''.format(config[dict]['table_name'])
                                  )
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
-        dop05 = DummyOperator(task_id='insert-new-row-' + dict, trigger_rule='none_failed')
+        dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
+                                 trigger_rule='none_failed',
+                                 sql='''INSERT INTO {} VALUES({}, {}, {});''',
+                                 parameters=(config[dict]['table_name'], uuid.uuid4().int % 123456789,
+                                             datetime.now(), uuid.uuid4().hex[:10])
+                                 )
 
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
 
