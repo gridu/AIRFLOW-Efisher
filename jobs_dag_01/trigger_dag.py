@@ -6,10 +6,9 @@ from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.subdag_operator import SubDagOperator
+from airflow.models import Variable
 
 from datetime import datetime, date, time, tzinfo, timezone, timedelta
-
-from airflow.models import Variable
 
 from jobs_dag_01.its_sub_dag import load_subdag
 

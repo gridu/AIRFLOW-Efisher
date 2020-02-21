@@ -3,10 +3,15 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash_operator import BashOperator
+from airflow.models import Variable
+
 from datetime import datetime, timezone, timedelta
+
 
 concurrency = 4
 catchup = False
+trigger_path = Variable.get("trigger_path_var", default_var='/tmp/trigger_it')
 
 config = {
     'dag_with_subdag_id_1': {'schedule_interval': timedelta(minutes=45),
@@ -59,7 +64,10 @@ def load_subdag(parent_dag_name, child_dag_name, args):
                                       default_args=args,
                                       dag=dag_subdag
                                       )
-        t>>external_check >> print_result
+
+        trigger_off = BashOperator(task_id='trigger_off', bash_command='rm -f {}'.format(trigger_path))
+
+        t >> external_check >> print_result >> trigger_off
 
     return dag_subdag
 """
