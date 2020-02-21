@@ -30,7 +30,7 @@ def print_to_log(ti, **kwargs):
 
 def report_result(ti, **kwargs):
         run_id = kwargs['run_id']
-        ti.xcom_push(key='all_done', value='{{ run_id }} ended')
+        ti.xcom_push(key='all_done', value='{} ended'.format(run_id))
         print('We are done. {} ended'.format(run_id))
 
 def check_table_exist(ti, **kwargs):
