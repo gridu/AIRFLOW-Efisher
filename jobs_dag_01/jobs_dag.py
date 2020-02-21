@@ -29,8 +29,8 @@ def print_to_log(ti, **kwargs):
     return "[print_to_log] end"
 
 def report_result(ti, **kwargs):
-        ti.xcom_push(key='all_done', value="{{ ti.run_id }} ended")
-        print('We are done. {{ ti.run_id }} ended')
+        ti.xcom_push(key='all_done', value='{{ run_id }} ended')
+        print('We are done. {{ run_id }} ended')
 
 def check_table_exist(ti, **kwargs):
     table_exist = bool(random.getrandbits(1))
