@@ -124,11 +124,13 @@ for dict in config:
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
+        reported_user = "{{ task_instance.xcom_pull(task_ids='report-user-sub-task-' + dict') }}"
         dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
                                  trigger_rule='none_failed',
                                  sql='''INSERT INTO {} VALUES(%s, %s, %s);'''.format(config[dict]['table_name']),
                                  parameters=(uuid.uuid4().int % 123456789,
-                                             datetime.now(), uuid.uuid4().hex[:10])
+                                             datetime.now(), reported_user
+                                             )
                                  )
 
         dop06 = DummyOperator(task_id='query-the-table-' + dict)
