@@ -60,17 +60,6 @@ def check_table_exist(sql_to_get_schema, sql_to_check_table_exist, table_name, *
         print('Table doesnt exists')
 
 
-    """
-    table_exist = bool(random.getrandbits(1))
-
-    if table_exist == True:
-        ti.xcom_push(key='table_exist', value=True)
-        print('Table exists')
-
-    else:
-        ti.xcom_push(key='table_exist', value=False)
-        print('Table doesnt exists')
-    """
 def create_or_not_table(ti, **kwargs):
 
     xcom_value = bool(ti.xcom_pull(key='table_exist'))
@@ -124,7 +113,8 @@ for dict in config:
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
-        reported_user = task_instance.xcom_pull(task_ids='report-user-sub-task-' + dict)
+        reported_user = '{{ ti.xcom_pull(task_ids="report-user-sub-task-" + dict) }}'
+
         dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
                                  trigger_rule='none_failed',
                                  sql='''INSERT INTO {} VALUES(%s, %s, %s);'''.format(config[dict]['table_name']),
