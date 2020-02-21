@@ -7,6 +7,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.models import Variable
 
 from datetime import datetime, timezone, timedelta
+from pprint import pprint
 
 
 concurrency = 4
