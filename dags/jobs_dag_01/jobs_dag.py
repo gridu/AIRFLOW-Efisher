@@ -138,7 +138,7 @@ for dict in config:
                                  )
 
 
-        dop06 = PostgreSQLCountRows(task_id='query-the-table-' + dict, table=config[dict]['table_name'])
+        dop06 = PostgreSQLCountRows(task_id='query-the-table-' + dict, table_name=config[dict]['table_name'])
 
         dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
