@@ -117,7 +117,7 @@ for dict in config:
                                  trigger_rule='none_failed',
                                  sql='''INSERT INTO {} VALUES(%s, %s, %s);'''.format(config[dict]['table_name']),
                                  parameters=(uuid.uuid4().int % 123456789,
-                                             datetime.now(), "{{ ti.xcom_pull(task_ids='report-user-sub-task-dag_id_1') }}"
+                                             datetime.now(), '{{ ti.xcom_pull(task_ids="report-user-sub-task-dag_id_1") }}'
                                              )
                                  )
 
