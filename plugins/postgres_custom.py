@@ -24,6 +24,7 @@ class PostgreSQLCountRows(BaseOperator):
         result = self.hook.get_first(
             sql="SELECT COUNT(*) FROM {};".format(self.table_name))
         log.info("Result: {}".format(result))
+        context['ti'].xcom_push(key='query_reult', value=result)
         return result
 
 
