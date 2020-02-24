@@ -8,7 +8,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.operators.postgres_operator import PostgresOperator
 
-from airflow.operators.postgres_custom_plugin import PostgreSQLCountRows
+from airflow.operators.postgres_custom import PostgreSQLCountRows
 import random
 from datetime import datetime, date, time, tzinfo,timezone, timedelta
 import uuid

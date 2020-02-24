@@ -28,5 +28,5 @@ class PostgreSQLCountRows(BaseOperator):
 
 
 class PostgreSQLCustomOperatorsPlugin(AirflowPlugin):
-    name = "postgres_custom_plugin"
+    name = "postgres_custom"
     operators = [PostgreSQLCountRows]
