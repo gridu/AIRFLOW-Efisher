@@ -1,16 +1,13 @@
-import airflow
 from airflow import DAG
 
 from airflow.contrib.sensors.file_sensor import FileSensor
-from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.operators.dagrun_operator import TriggerDagRunOperator
-from airflow.operators.bash_operator import BashOperator
 from airflow.operators.subdag_operator import SubDagOperator
 from airflow.models import Variable
 
-from datetime import datetime, date, time, tzinfo, timezone, timedelta
+from datetime import datetime, timezone, timedelta
 
-from jobs_dag_01.its_sub_dag import load_subdag
+from dags.jobs_dag_01.its_sub_dag import load_subdag
 
 trigger_path = Variable.get("trigger_path_var", default_var='/tmp/trigger_it')
 
