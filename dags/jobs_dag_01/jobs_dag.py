@@ -8,6 +8,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.operators.postgres_operator import PostgresOperator
 
+from airflow.operators.postgres_custom import PostgreSQLCountRows
 import random
 from datetime import datetime, date, time, tzinfo,timezone, timedelta
 import uuid
@@ -137,13 +138,7 @@ for dict in config:
                                  )
 
 
-        dop06 = PythonOperator(task_id='query-the-table-' + dict,
-                               provide_context=True,
-                               python_callable=query_table,
-                               op_args=["SELECT COUNT(*) FROM {};",
-                                        config[dict]['table_name']]
-                               )
-
+        dop06 = PostgreSQLCountRows(task_id='query-the-table-' + dict, table=config[dict]['table_name'])
 
         dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
