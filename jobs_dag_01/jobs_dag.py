@@ -24,6 +24,9 @@ config = {
 }
 
 
+class TemplPostgresOperator(PostgresOperator):
+    template_fields = ('sql', 'parameters')
+
 def print_to_log(ti, **kwargs):
     dag_id = ti.dag_id
     database = kwargs['database']
@@ -113,7 +116,7 @@ for dict in config:
 
         dop04 = DummyOperator(task_id='skip_table_creation')
 
-        dop05 = PostgresOperator(task_id='insert-new-row-' + dict,
+        dop05 = TemplPostgresOperator(task_id='insert-new-row-' + dict,
                                  trigger_rule='none_failed',
                                  sql='''INSERT INTO {} VALUES(%s, %s, %s);'''.format(config[dict]['table_name']),
                                  parameters=(uuid.uuid4().int % 123456789,
