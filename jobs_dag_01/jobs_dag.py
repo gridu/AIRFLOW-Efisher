@@ -140,7 +140,7 @@ for dict in config:
         dop06 = PythonOperator(task_id='query-the-table-' + dict,
                                provide_context=True,
                                python_callable=query_table,
-                               op_args=["SELECT COUNT(*) FROM {};",
+                               op_args=["SELECT * FROM {};",
                                         config[dict]['table_name']]
                                )
 
