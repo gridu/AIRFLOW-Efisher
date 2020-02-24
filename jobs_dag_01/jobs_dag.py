@@ -63,6 +63,18 @@ def check_table_exist(sql_to_get_schema, sql_to_check_table_exist, table_name, *
         print('Table doesnt exists')
 
 
+def query_table(sql_query, table_name, **kwargs):
+    ti = kwargs['ti']
+    """ callable function to get schema name and after that check if table exist """
+    hook = PostgresHook()
+    # get schema name
+    query = hook.get_records(sql=sql_query.format(table_name))
+
+    if query:
+        ti.xcom_push(key='query_reult', value=query)
+        print('query_reult: {}'.format(query))
+
+
 def create_or_not_table(ti, **kwargs):
 
     xcom_value = bool(ti.xcom_pull(key='table_exist'))
@@ -124,7 +136,14 @@ for dict in config:
                                              )
                                  )
 
-        dop06 = DummyOperator(task_id='query-the-table-' + dict)
+
+        dop06 = PythonOperator(task_id='query-the-table-' + dict,
+                               provide_context=True,
+                               python_callable=query_table,
+                               op_args=["SELECT COUNT(*) FROM {};",
+                                        config[dict]['table_name']]
+                               )
+
 
         dop07 = PythonOperator(task_id='last-task',
                                provide_context=True,
